@@ -1,0 +1,28 @@
+from project_crud import CustomCRUD
+
+crud_instance = CustomCRUD(
+    "mongodb://aacuser:Password@nv-desktop-services.apporto.com:32191/?directConnection=true&appName=mongosh+1.8.0",
+    "AAC",  
+    "animals"  
+)
+
+# Test Create Entry
+entry_data = {"name": "Max", "age": 1, "breed": "Labrador"}
+creation_result = crud_instance.create_entry(entry_data)
+print(f"Entry creation successful: {creation_result}")
+
+# Test Read Entries
+search_criteria = {"name": "Max"}
+query_results = crud_instance.read_entries(search_criteria)
+print(f"Query results: {query_results}")
+
+# Test Update Entries
+update_criteria = {"name": "Max"}
+new_data = {"age": 2}
+update_results = crud_instance.update_entries(update_criteria, new_data)
+print(f"Update results: {update_results} documents updated")
+
+# Test Delete Entries
+delete_criteria = {"name": "Max"}
+deletion_results = crud_instance.delete_entries(delete_criteria)
+print(f"Deletion results: {deletion_results} documents deleted")
