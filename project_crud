@@ -1,0 +1,45 @@
+import pymongo
+from pymongo import MongoClient
+
+class CustomCRUD:
+    def __init__(self, connection_string, database, collection):
+        self.client = MongoClient(connection_string)
+        self.db = self.client[database]
+        self.collection = self.db[collection]
+
+    def create_entry(self, data):
+        """Insert new document"""
+        try:
+            self.collection.insert_one(data)
+            return True
+        except pymongo.errors.PyMongoError as e:
+            print(f"Insertion error: {e}")
+            return False
+
+    def read_entries(self, criteria):
+        """Fetch documents"""
+        try:
+            entries = self.collection.find(criteria)
+            return list(entries)
+        except pymongo.errors.PyMongoError as e:
+            print(f"Read error: {e}")
+            return []
+
+    def update_entries(self, search_criteria, new_values):
+        """Update documents"""
+        try:
+            update_result = self.collection.update_many(search_criteria, {'$set': new_values})
+            return update_result.modified_count
+        except pymongo.errors.PyMongoError as e:
+            print(f"Update error: {e}")
+            return 0
+
+    def delete_entries(self, criteria):
+        """Delete documents"""
+        try:
+            delete_result = self.collection.delete_many(criteria)
+            return delete_result.deleted_count
+        except pymongo.errors.PyMongoError as e:
+            print(f"Deletion error: {e}")
+            return 0
+
